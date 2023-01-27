@@ -5,28 +5,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="./main.js"></script>
+    <script src="./main.js" defer></script>
 </head>
 <body>
     <header>
         TODO
     </header>
+    <button id="new-todo">+</button>
     <div class="sidebar">
         <ul class="sideList">
-            <li>All</li>
-            <li>Today</li>
-            <li>This week</li>
-            <li>
-                Projects
-                <ul></ul>
-            </li>
+            <li id="all" class="clickable">All</li>
+            <li id="today" class="clickable">Today</li>
+            <li id="this-week" class="clickable">This week</li>
+            <li class="main">Projects</li>
+        </ul>
+        <ul class="projectList">
+
         </ul>
     </div>
     <div class="content">
         <div class="todo">
             <input type="checkbox" name="taskDone" id="taskDone">
             <div class="task">Do this</div>
-            <div class="project">Moneygun Run</div>
+            <div class="project">Project</div>
+            <div class="date">1st Sept. 2023</div>
+        </div>
+        <div class="todo">
+            <input type="checkbox" name="taskDone" id="taskDone">
+            <div class="task">Do this</div>
+            <div class="project">Project</div>
             <div class="date">1st Sept. 2023</div>
         </div>
     </div>

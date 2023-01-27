@@ -72,17 +72,34 @@ ul {
     padding: 0;
 }
 
+ul.projectList {
+    padding-left: 30px;
+    margin-top: 10px;
+}
+
+.projectList li {
+    padding-left: 5px;
+    box-sizing: border-box;
+    height: 30px;
+    font-size: 16px;
+    color: rgb(223, 74, 54);
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 .sideList li {
     height: 40px;
     font-size: 18px;
     color:rgb(56, 56, 56);
-    margin-bottom: 0px;
+    margin-bottom: 5px;
     display: flex;
     align-items: center;
     padding-left: 10px;
 }
 
-.sideList li:hover {
+li.clickable:hover,
+li.clickable:hover {
     cursor: pointer;
     background-color: rgb(230, 230, 230);
     border-radius: 5px;
@@ -96,8 +113,27 @@ ul {
     padding: 20px;
 }
 
+button#new-todo {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    border: none;
+    background-color: rgb(223, 74, 54);
+    color: white;
+    font-family: 'RobotoMedium';
+    font-size: 42px;
+}
+
+button#new-todo:hover {
+    cursor: pointer;
+    background-color: rgb(206, 64, 46);
+}
+
 .todo {
-    border-bottom: 1px solid rgb(70, 70, 70);
+    border-bottom: 1px solid rgb(206, 206, 206);
     width: 100%;
     display: grid;
     grid-template-columns: 40px 1fr 200px;
@@ -106,6 +142,7 @@ ul {
     padding-bottom: 20px;
     padding-right: 15px;
     box-sizing: border-box;
+    margin-bottom: 20px;
 }
 
 .todo input {
