@@ -6,35 +6,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="./main.js" defer></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
-    <header>
-        TODO
-    </header>
-    <button id="new-todo">+</button>
-    <div class="sidebar">
-        <ul class="sideList">
-            <li id="all" class="clickable">All</li>
-            <li id="today" class="clickable">Today</li>
-            <li id="this-week" class="clickable">This week</li>
-            <li class="main">Projects</li>
-        </ul>
-        <ul class="projectList">
+    <div class="details-popup">
+        <div class="panel">
 
-        </ul>
-    </div>
-    <div class="content">
-        <div class="todo">
-            <input type="checkbox" name="taskDone" id="taskDone">
-            <div class="task">Do this</div>
-            <div class="project">Project</div>
-            <div class="date">1st Sept. 2023</div>
         </div>
-        <div class="todo">
-            <input type="checkbox" name="taskDone" id="taskDone">
-            <div class="task">Do this</div>
-            <div class="project">Project</div>
-            <div class="date">1st Sept. 2023</div>
+    </div>
+    <div class="main">
+        <header>
+            TODO
+        </header>
+        <button id="new-todo">+</button>
+        <div class="sidebar">
+            <ul class="sideList">
+                <li id="all" class="clickable">All</li>
+                <li id="today" class="clickable">Today</li>
+                <li id="this-week" class="clickable">This week</li>
+                <li class="main">Projects</li>
+            </ul>
+            <ul class="projectList">
+    
+            </ul>
+        </div>
+        <div class="content">
+            <div class="todo">
+                <input type="checkbox" name="taskDone" id="taskDone">
+                <div class="task">Do this</div>
+                <div class="project">Project</div>
+                <div class="date">1st Sept. 2023</div>
+                <div class="buttons">
+                    <span class="material-symbols-outlined edit">edit</span>
+                    <span class="material-symbols-outlined details">visibility</span>
+                    <span class="material-symbols-outlined delete">delete</span>
+                </div>
+            </div>
+            <div class="todo">
+                <input type="checkbox" name="taskDone" id="taskDone">
+                <div class="task">Do this</div>
+                <div class="project">Project</div>
+                <div class="date">1st Sept. 2023</div>
+            </div>
         </div>
     </div>
 </body>

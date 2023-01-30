@@ -128,7 +128,12 @@ const domManager = (() => {
         <input class="${todo.getIndex()}" onclick="checkboxClicked(${todo.getIndex()})" type="checkbox" name="taskDone" id="taskDone" class="" ${todo.isDone() ? 'checked' : ''}>
         <div class="task">${todo.getTask()}</div>
         <div class="project">${todo.getProject().getName()}</div>
-        <div class="date">${todo.getDate()}</div>`;
+        <div class="date">${todo.getDate()}</div>
+        <div class="buttons">
+        <span class="material-symbols-outlined edit">edit</span>
+        <span class="material-symbols-outlined details">visibility</span>
+        <span class="material-symbols-outlined delete">delete</span>
+        </div>`;
         return todoElement;
     }
 

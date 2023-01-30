@@ -42,6 +42,11 @@ html {
 body {
     margin: 0;
     padding: 0;
+}
+
+.main {
+    margin: 0;
+    padding: 0;
     display: grid;
     grid-template-columns: 300px 3fr;
     grid-auto-flow: row;
@@ -189,6 +194,29 @@ button#new-todo:hover {
     color:rgb(56, 56, 56);
 }
 
+.todo .buttons {
+    grid-column: 3/4;
+    grid-row: 2/3;
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    color:rgb(175, 175, 175);
+}
+
+.material-symbols-outlined {
+    font-size: 22px;
+}
+
+.material-symbols-outlined:hover {
+    cursor: pointer;
+    color:rgb(56, 56, 56);
+}
+
+.material-symbols-outlined.delete:hover {
+    cursor: pointer;
+    color:rgb(204, 38, 38);
+}
+
 .date {
     font-family: 'RobotoRegular';
     color:rgb(85, 85, 85);
@@ -205,4 +233,28 @@ button#new-todo:hover {
     font-family: 'RobotoItalic';
     font-size: 16px;
     color:rgb(104, 93, 255)
+}
+
+
+
+.details-popup {
+    visibility: hidden;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.582);
+    display: flex;
+    justify-content: center;
+}
+
+.details-popup.show {
+    visibility: visible;
+}
+
+.details-popup .panel {
+    margin-top: 20vh;
+    background-color: white;
+    border-radius: 3px;
+    height: 400px;
+    width: 500px;
 }
