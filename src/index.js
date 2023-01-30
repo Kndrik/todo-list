@@ -14,7 +14,11 @@ const todosHolder = (() => {
         return todos[index];
     }
 
-    return { addTodo, getSize, getTodo };
+    const removeTodo = (index) => {
+
+    }
+
+    return { addTodo, getSize, getTodo, removeTodo };
 })();
 
 const projectManager = (() => {
@@ -43,7 +47,6 @@ const projectManager = (() => {
 })();
 
 const todo = (task, details, date, project, done) => {
-    const projectName = project.getName().replace(/\s/g, '');
     const index = todosHolder.getSize();
 
     function getTask() {
@@ -94,6 +97,10 @@ const project = (name) => {
         todos.push(todo);
     }
 
+    function removeTodo(todo) {
+        todos.splice(todos.findIndex((element) => element === todo), 1);
+    }
+
     function getTodos() {
         return todos;
     }
@@ -102,7 +109,7 @@ const project = (name) => {
         return name;
     }
 
-    return { addTodo, getTodos, getName };
+    return { addTodo, getTodos, getName, removeTodo };
 };
 
 window.checkboxClicked = (index) => {
@@ -124,12 +131,26 @@ window.toggleDetails = (index) => {
     document.querySelector('.details-date').textContent = todo.getDate();
 }
 
+window.deleteTodo = (index) => {
+    domManager.removeTodo(index);
+    const todo = todosHolder.getTodo(index);
+    const project = todo.getProject();
+    project.removeTodo(todo);
+    todosHolder.removeTodo(index);
+}
+
 const domManager = (() => {
+    let lastShown = 'all';
     const content = document.querySelector('.content');
     const allButton = document.querySelector('#all');
     allButton.addEventListener('click', () => {
         showAll();
     })
+
+    const removeTodo = (index) => {
+        const toRemove = document.querySelector(`.todo[index="${index}"]`);
+        toRemove.remove();
+    }
 
     const getTodoElement = (todo) => {
         const todoElement = document.createElement('div');
@@ -144,13 +165,9 @@ const domManager = (() => {
         <div class="buttons">
         <span class="material-symbols-outlined edit">edit</span>
         <span class="material-symbols-outlined details" onclick="toggleDetails(${todo.getIndex()})">visibility</span>
-        <span class="material-symbols-outlined delete">delete</span>
+        <span class="material-symbols-outlined delete" onclick="deleteTodo(${todo.getIndex()})">delete</span>
         </div>`;
         return todoElement;
-    }
-
-    const changeTodoStatus = (index) => {
-        console.log(todosHolder.getTodo(index).getTask());
     }
 
     const removeContent = () => {
@@ -176,7 +193,7 @@ const domManager = (() => {
         });
     }
 
-    return { showProject, showAll, removeContent }
+    return { showProject, showAll, removeContent, removeTodo }
 })();
 
 const projectOne = project('Default');
