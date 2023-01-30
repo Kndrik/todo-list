@@ -1,5 +1,22 @@
 import './style.css';
 
+const todosHolder = (() => {
+    const todos = new Array();
+    const addTodo = (todo) => {
+        todos.push(todo);
+    }
+
+    const getSize = () => {
+        return todos.length;
+    }
+
+    const getTodo = (index) => {
+        return todos[index];
+    }
+
+    return { addTodo, getSize, getTodo };
+})();
+
 const projectManager = (() => {
     const projects = new Array();
     
@@ -26,6 +43,9 @@ const projectManager = (() => {
 })();
 
 const todo = (task, details, date, project, done) => {
+    const projectName = project.getName().replace(/\s/g, '');
+    const index = todosHolder.getSize();
+
     function getTask() {
         return task;
     }
@@ -45,8 +65,16 @@ const todo = (task, details, date, project, done) => {
     function isDone() {
         return done;
     }
+    
+    function getIndex() {
+        return index;
+    }
 
-    return { getTask, getDetails, getDate, getProject, isDone };
+    function setDone(nowDone) {
+        done = nowDone;
+    } 
+
+    return { getTask, getDetails, getDate, getProject, isDone, getIndex, setDone };
 };
 
 const project = (name) => {
@@ -77,6 +105,13 @@ const project = (name) => {
     return { addTodo, getTodos, getName };
 };
 
+window.checkboxClicked = (index) => {
+    const todo = todosHolder.getTodo(index);
+    todo.setDone(!todo.isDone());
+    const element = document.querySelector(`.todo[index="${index.toString()}"]`);
+    element.classList.toggle('done');
+}
+
 const domManager = (() => {
     const content = document.querySelector('.content');
     const allButton = document.querySelector('#all');
@@ -84,15 +119,22 @@ const domManager = (() => {
         showAll();
     })
 
-    const getTodoHtml = (todo) => {
-        return `
-        <div class="todo">
-            <input type="checkbox" name="taskDone" id="taskDone" class="" ${todo.isDone() ? 'checked' : ''}>
-            <div class="task">${todo.getTask()}</div>
-            <div class="project">${todo.getProject().getName()}</div>
-            <div class="date">${todo.getDate()}</div>
-        </div>`;
-    };
+    const getTodoElement = (todo) => {
+        const todoElement = document.createElement('div');
+        todoElement.classList.add('todo');
+        if (todo.isDone()) todoElement.classList.add('done');
+        todoElement.setAttribute('index', `${todo.getIndex()}`);
+        todoElement.innerHTML = `            
+        <input class="${todo.getIndex()}" onclick="checkboxClicked(${todo.getIndex()})" type="checkbox" name="taskDone" id="taskDone" class="" ${todo.isDone() ? 'checked' : ''}>
+        <div class="task">${todo.getTask()}</div>
+        <div class="project">${todo.getProject().getName()}</div>
+        <div class="date">${todo.getDate()}</div>`;
+        return todoElement;
+    }
+
+    const changeTodoStatus = (index) => {
+        console.log(todosHolder.getTodo(index).getTask());
+    }
 
     const removeContent = () => {
         content.innerHTML = '';
@@ -103,8 +145,9 @@ const domManager = (() => {
         const todos = project.getTodos();
         for (let i = 0; i < todos.length; i++) {
             if (todos[i] === null) continue;
-            const todoHTML = getTodoHtml(todos[i]);
-            content.innerHTML += todoHTML;
+            const todoElement = getTodoElement(todos[i]);
+            content.appendChild(todoElement);
+            todoElement.todoObj = todos[i];
         }
     };
 
@@ -128,13 +171,18 @@ projectManager.addProject(projectTwo);
 projectManager.addProject(projectThree);
 
 const taskOne = todo('Do cool stuff', 'y', '1st Dec. 2022', projectOne, false);
+todosHolder.addTodo(taskOne);
 const taskTwo = todo('Do that', 'y', '1st Dec. 2023', projectOne, false);
+todosHolder.addTodo(taskTwo);
 const taskThree = todo('Wash toilets', '', '25 January 2023', projectOne, true);
+todosHolder.addTodo(taskThree);
+const taskFour = todo('Change character', '', 'Tomorrow', projectTwo, false);
+todosHolder.addTodo(taskFour);
 
 projectOne.addTodo(taskOne);
 projectOne.addTodo(taskTwo);
 projectOne.addTodo(taskThree);
-projectTwo.addTodo(todo('Change character', '', 'Tomorrow', projectTwo, false));
+projectTwo.addTodo(taskFour);
 
 //domManager.showProject(projectOne);
 // domManager.showProject(projectTwo);
