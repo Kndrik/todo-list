@@ -112,6 +112,18 @@ window.checkboxClicked = (index) => {
     element.classList.toggle('done');
 }
 
+window.toggleDetails = (index) => {
+    const element = document.querySelector('.details-popup');
+    element.classList.toggle('show');
+    if (!element.classList.contains('show')) return;
+    const todo = todosHolder.getTodo(index);
+
+    document.querySelector('.details-task').textContent = todo.getTask();
+    document.querySelector('.details-text').textContent = todo.getDetails();
+    document.querySelector('.details-project').textContent = todo.getProject().getName();
+    document.querySelector('.details-date').textContent = todo.getDate();
+}
+
 const domManager = (() => {
     const content = document.querySelector('.content');
     const allButton = document.querySelector('#all');
@@ -131,7 +143,7 @@ const domManager = (() => {
         <div class="date">${todo.getDate()}</div>
         <div class="buttons">
         <span class="material-symbols-outlined edit">edit</span>
-        <span class="material-symbols-outlined details">visibility</span>
+        <span class="material-symbols-outlined details" onclick="toggleDetails(${todo.getIndex()})">visibility</span>
         <span class="material-symbols-outlined delete">delete</span>
         </div>`;
         return todoElement;
@@ -175,13 +187,13 @@ projectManager.addProject(projectOne);
 projectManager.addProject(projectTwo);
 projectManager.addProject(projectThree);
 
-const taskOne = todo('Do cool stuff', 'y', '1st Dec. 2022', projectOne, false);
+const taskOne = todo('Do cool stuff', 'I really need to do more cool stuff. I have not done cool stuff in a very long time.', '1st Dec. 2022', projectOne, false);
 todosHolder.addTodo(taskOne);
-const taskTwo = todo('Do that', 'y', '1st Dec. 2023', projectOne, false);
+const taskTwo = todo('Do that', 'That would definitely help', '1st Dec. 2023', projectOne, false);
 todosHolder.addTodo(taskTwo);
-const taskThree = todo('Wash toilets', '', '25 January 2023', projectOne, true);
+const taskThree = todo('Clean dishes', 'It is not very fun but it needs to be done. uh...', '25 January 2023', projectOne, true);
 todosHolder.addTodo(taskThree);
-const taskFour = todo('Change character', '', 'Tomorrow', projectTwo, false);
+const taskFour = todo('Change character', 'The current one clashes too much with the recent artistic direction change. We should find something that looks more in tune with the rest. (We could add a stylish cell shading ??)', 'Tomorrow', projectTwo, false);
 todosHolder.addTodo(taskFour);
 
 projectOne.addTodo(taskOne);

@@ -200,7 +200,7 @@ button#new-todo:hover {
     display: flex;
     justify-content: flex-end;
     gap: 20px;
-    color:rgb(175, 175, 175);
+    color:rgb(148, 148, 148);
 }
 
 .material-symbols-outlined {
@@ -255,6 +255,43 @@ button#new-todo:hover {
     margin-top: 20vh;
     background-color: white;
     border-radius: 3px;
-    height: 400px;
+    height: 300px;
     width: 500px;
+
+    padding: 20px 50px 20px 20px;
+    box-sizing: border-box;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.details-task {
+    font-family: 'RobotoBold';
+    font-size: 28px;
+    text-align: start;
+    margin-bottom: 10px;
+}
+
+.details-text {
+    font-size: 18px;
+    color:rgb(85, 85, 85);
+}
+
+.details-project {
+    font-family: 'RobotoItalic';
+    color:rgb(104, 93, 255);
+    margin-bottom: 5px;
+}
+
+.details-date {
+    color:rgb(56, 56, 56);
+}
+
+.panel .close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 26px;
 }
