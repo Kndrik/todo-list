@@ -207,7 +207,7 @@ button#new-todo:hover {
     font-size: 22px;
 }
 
-.material-symbols-outlined:hover {
+.buttons .material-symbols-outlined:hover {
     cursor: pointer;
     color:rgb(56, 56, 56);
 }
@@ -237,7 +237,8 @@ button#new-todo:hover {
 
 
 
-.details-popup {
+.details-popup,
+.create-popup {
     visibility: hidden;
     position: fixed;
     height: 100vh;
@@ -247,8 +248,23 @@ button#new-todo:hover {
     justify-content: center;
 }
 
-.details-popup.show {
+.details-popup.show,
+.create-popup.show {
     visibility: visible;
+}
+
+.create-popup .panel {
+    margin-top: 20vh;
+    background-color: white;
+    border-radius: 3px;
+    height: 360px;
+    width: 400px;
+
+    box-sizing: border-box;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
 }
 
 .details-popup .panel {
@@ -289,9 +305,96 @@ button#new-todo:hover {
     color:rgb(56, 56, 56);
 }
 
-.panel .close {
+.details-popup .panel .close {
     position: absolute;
     right: 15px;
     top: 15px;
     font-size: 26px;
+}
+
+.create-form {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.create-form button {
+    height: 35px;
+    border: none;
+    background-color: rgb(223, 74, 54);
+    color: white;
+    font-family: 'RobotoMedium';
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.create-form button:hover {
+    cursor: pointer;
+    background-color: rgb(206, 63, 44);
+}
+
+.create-form .top {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-task {
+    font-size: 16px;
+    min-height: 30px;
+    flex: 1;
+}
+
+.form-details {
+    font-size: 14px;
+    resize: none;
+}
+
+.form-selections {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.form-project,
+.form-date {
+    flex: 1;
+    min-height: 30px;
+}
+
+.panel .header {
+    flex: 1;
+    background-color: rgb(223, 74, 54);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 35px;
+    position: relative;
+}
+
+.header .title {
+    font-family: 'RobotoBold';
+    font-size: 16px
+}
+
+.create-popup .header .close {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    font-size: 26px;
+}
+
+.create-popup .header .close:hover {
+    cursor: pointer;
+}
+
+.details-popup .panel .close:hover {
+    cursor: pointer;
+    color: black;
 }

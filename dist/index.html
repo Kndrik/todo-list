@@ -25,11 +25,33 @@
             </div>
         </div>
     </div>
+    <div class="create-popup show">
+        <div class="panel">
+            <div class="header">
+                <span class="title">New Task</span>
+                <span class="material-symbols-outlined close" onclick="toggleNewTodo()">close</span>
+            </div>
+            <form class="create-form">
+                <div class="top">
+                    <input class="form-task" type="text" name="form-task" id="form-tast" placeholder="Task">
+                    <textarea class="form-details" name="form-details" id="form-details" cols="30" rows="9" placeholder="Details..."></textarea>
+                    <div class="form-selections">
+                        <input class="form-date" type="date" name="form-date" id="form-date">
+                        <select class="form-project" name="form-project" id="form-project">
+                            <option value="default">Default</option>
+                            <option value="moneygunrun">Moneygun Run</option>
+                        </select>
+                    </div>
+                </div>
+                <button>Confirm</button>
+            </form>
+        </div>
+    </div>
     <div class="main">
         <header>
             TODO
         </header>
-        <button id="new-todo">+</button>
+        <button id="new-todo" onclick="toggleNewTodo()">+</button>
         <div class="sidebar">
             <ul class="sideList">
                 <li id="all" class="clickable">All</li>

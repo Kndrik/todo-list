@@ -139,6 +139,11 @@ window.deleteTodo = (index) => {
     todosHolder.removeTodo(index);
 }
 
+window.toggleNewTodo = () => {
+    const element = document.querySelector('.create-popup');
+    element.classList.toggle('show');
+}
+
 const domManager = (() => {
     let lastShown = 'all';
     const content = document.querySelector('.content');
