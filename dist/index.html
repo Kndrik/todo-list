@@ -25,7 +25,27 @@
             </div>
         </div>
     </div>
-    <div class="create-popup show">
+    <div class="edit-popup">
+        <div class="panel">
+            <div class="header">
+                <span class="title">Edit Task</span>
+                <span class="material-symbols-outlined close" onclick="toggleEdit()">close</span>
+            </div>
+            <form class="edit-form">
+                <div class="top">
+                    <input class="edit-task" type="text" name="edit-task" id="edit-task" placeholder="Task" required>
+                    <textarea class="edit-details" name="edit-details" id="edit-details" cols="30" rows="9" placeholder="Details..."></textarea>
+                    <div class="edit-selections">
+                        <input class="edit-date" type="date" name="edit-date" id="edit-date" required>
+                        <select class="edit-project" name="edit-project" id="edit-project" required>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="confirm">Confirm</button>
+            </form>
+        </div>
+    </div>
+    <div class="create-popup">
         <div class="panel">
             <div class="header">
                 <span class="title">New Task</span>
@@ -33,17 +53,15 @@
             </div>
             <form class="create-form">
                 <div class="top">
-                    <input class="form-task" type="text" name="form-task" id="form-tast" placeholder="Task">
+                    <input class="form-task" type="text" name="form-task" id="form-task" placeholder="Task" required>
                     <textarea class="form-details" name="form-details" id="form-details" cols="30" rows="9" placeholder="Details..."></textarea>
                     <div class="form-selections">
-                        <input class="form-date" type="date" name="form-date" id="form-date">
-                        <select class="form-project" name="form-project" id="form-project">
-                            <option value="default">Default</option>
-                            <option value="moneygunrun">Moneygun Run</option>
+                        <input class="form-date" type="date" name="form-date" id="form-date" required>
+                        <select class="form-project" name="form-project" id="form-project" required>
                         </select>
                     </div>
                 </div>
-                <button>Confirm</button>
+                <button type="submit" class="confirm">Confirm</button>
             </form>
         </div>
     </div>
@@ -55,8 +73,7 @@
         <div class="sidebar">
             <ul class="sideList">
                 <li id="all" class="clickable">All</li>
-                <li id="today" class="clickable">Today</li>
-                <li id="this-week" class="clickable">This week</li>
+
                 <li class="main">Projects</li>
             </ul>
             <ul class="projectList">

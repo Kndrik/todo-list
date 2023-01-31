@@ -77,7 +77,14 @@ const todo = (task, details, date, project, done) => {
         done = nowDone;
     } 
 
-    return { getTask, getDetails, getDate, getProject, isDone, getIndex, setDone };
+    function edit(newTask, newDetails, newDate, newProject) {
+        task = newTask;
+        details = newDetails;
+        date = newDate;
+        project = newProject;
+    }
+
+    return { getTask, getDetails, getDate, getProject, isDone, getIndex, setDone, edit };
 };
 
 const project = (name) => {
@@ -112,6 +119,119 @@ const project = (name) => {
     return { addTodo, getTodos, getName, removeTodo };
 };
 
+const formManager = (() => {
+    const confirmNewTodo = (event) => {
+        event.preventDefault();
+        const task = document.querySelector('.form-task').value;
+        const details = document.querySelector('.form-details').value;
+        const date = document.querySelector('.form-date').value;
+        console.log(date);
+        const project = document.querySelector('.form-project').value;
+
+        creationManager.createTodo(task, details, date, project, false);
+        toggleNewTodo();
+    }
+
+    const confirmEditTodo = (event, index) => {
+        event.preventDefault();
+        const newTask = document.querySelector('.edit-task').value;
+        const newDetails = document.querySelector('.edit-details').value;
+        const newDate = document.querySelector('.edit-date').value;
+        const newProject = projectManager.getProject(document.querySelector('.edit-project').value);
+
+        toggleEdit();
+        const todoToEdit = todosHolder.getTodo(index);
+        todoToEdit.edit(newTask, newDetails, newDate, newProject);
+        domManager.refreshDom();
+    }
+
+    return { confirmNewTodo, confirmEditTodo }
+})();
+
+const domManager = (() => {
+    let lastShown = 'all';
+    const content = document.querySelector('.content');
+    const allButton = document.querySelector('#all');
+    allButton.addEventListener('click', () => {
+        showAll();
+    })
+
+    const removeTodo = (index) => {
+        const toRemove = document.querySelector(`.todo[index="${index}"]`);
+        toRemove.remove();
+    }
+
+    const getTodoElement = (todo) => {
+        const todoElement = document.createElement('div');
+        todoElement.classList.add('todo');
+        if (todo.isDone()) todoElement.classList.add('done');
+        todoElement.setAttribute('index', `${todo.getIndex()}`);
+        todoElement.innerHTML = `            
+        <input class="${todo.getIndex()}" onclick="checkboxClicked(${todo.getIndex()})" type="checkbox" name="taskDone" id="taskDone" class="" ${todo.isDone() ? 'checked' : ''}>
+        <div class="task">${todo.getTask()}</div>
+        <div class="project">${todo.getProject().getName()}</div>
+        <div class="date">${todo.getDate()}</div>
+        <div class="buttons">
+        <span class="material-symbols-outlined edit" onclick="toggleEdit(${todo.getIndex()})">edit</span>
+        <span class="material-symbols-outlined details" onclick="toggleDetails(${todo.getIndex()})">visibility</span>
+        <span class="material-symbols-outlined delete" onclick="deleteTodo(${todo.getIndex()})">delete</span>
+        </div>`;
+        return todoElement;
+    }
+
+    const removeContent = () => {
+        content.innerHTML = '';
+    }
+
+    const showProject = (projectName) => {
+        const project = projectManager.getProject(projectName);
+        const todos = project.getTodos();
+        for (let i = 0; i < todos.length; i++) {
+            if (todos[i] === null) continue;
+            const todoElement = getTodoElement(todos[i]);
+            content.appendChild(todoElement);
+            todoElement.todoObj = todos[i];
+        }
+        lastShown = projectName;
+    };
+
+    const showAll = () => {
+        removeContent();
+        const projects = projectManager.getProjects();
+        projects.forEach(project => {
+            showProject(project.getName());
+        });
+        lastShown = 'all';
+    }
+
+    const refreshDom = () => {
+        removeContent();
+        if (lastShown === 'all') {
+            showAll();
+        } else {
+            showProject(lastShown);
+        }
+    }
+
+    return { showProject, showAll, removeContent, removeTodo, refreshDom }
+})();
+
+const creationManager = (() => {
+    const createTodo = (task, details, date, project) => {
+        const projectObj = projectManager.getProject(project);
+        const newTodo = todo(task, details, date, projectObj, false);
+        todosHolder.addTodo(newTodo);
+        projectObj.addTodo(newTodo);
+        domManager.refreshDom();
+    }
+
+    const createProject = (name) => {
+        projectManager.addProject(project(name));
+    }
+
+    return { createTodo, createProject };
+})();
+
 window.checkboxClicked = (index) => {
     const todo = todosHolder.getTodo(index);
     todo.setDone(!todo.isDone());
@@ -142,64 +262,54 @@ window.deleteTodo = (index) => {
 window.toggleNewTodo = () => {
     const element = document.querySelector('.create-popup');
     element.classList.toggle('show');
+    if (!element.classList.contains('show')) return;
+
+    const form = document.querySelector('form.create-form');
+    form.onsubmit = formManager.confirmNewTodo;
+
+    const selectElem = document.querySelector('.form-project');
+    selectElem.innerHTML = '';
+    const projects = projectManager.getProjects();
+    for (let i = 0; i < projects.length; i++) {
+        selectElem.innerHTML += `<option value="${projects[i].getName()}">${projects[i].getName()}</option>`
+    }
+
+    document.querySelector('.form-task').value = '';
+    document.querySelector('.form-details').value = '';
+    document.querySelector('.form-date').value = null;
 }
 
-const domManager = (() => {
-    let lastShown = 'all';
-    const content = document.querySelector('.content');
-    const allButton = document.querySelector('#all');
-    allButton.addEventListener('click', () => {
-        showAll();
-    })
+window.toggleEdit = (index) => {
+    const element = document.querySelector('.edit-popup');
+    element.classList.toggle('show');
 
-    const removeTodo = (index) => {
-        const toRemove = document.querySelector(`.todo[index="${index}"]`);
-        toRemove.remove();
+    if (!element.classList.contains('show')) return;
+    if (index === undefined) return;
+
+    const form = document.querySelector('form.edit-form');
+    form.onsubmit = (event) => {
+        formManager.confirmEditTodo(event, index);
     }
 
-    const getTodoElement = (todo) => {
-        const todoElement = document.createElement('div');
-        todoElement.classList.add('todo');
-        if (todo.isDone()) todoElement.classList.add('done');
-        todoElement.setAttribute('index', `${todo.getIndex()}`);
-        todoElement.innerHTML = `            
-        <input class="${todo.getIndex()}" onclick="checkboxClicked(${todo.getIndex()})" type="checkbox" name="taskDone" id="taskDone" class="" ${todo.isDone() ? 'checked' : ''}>
-        <div class="task">${todo.getTask()}</div>
-        <div class="project">${todo.getProject().getName()}</div>
-        <div class="date">${todo.getDate()}</div>
-        <div class="buttons">
-        <span class="material-symbols-outlined edit">edit</span>
-        <span class="material-symbols-outlined details" onclick="toggleDetails(${todo.getIndex()})">visibility</span>
-        <span class="material-symbols-outlined delete" onclick="deleteTodo(${todo.getIndex()})">delete</span>
-        </div>`;
-        return todoElement;
+    const task = document.querySelector('.edit-task');
+    const details = document.querySelector('.edit-details');
+    const date = document.querySelector('.edit-date');
+    const project = document.querySelector('.edit-project');
+
+    const todo = todosHolder.getTodo(index);
+
+    const selectElem = document.querySelector('.edit-project');
+    selectElem.innerHTML = '';
+    const projects = projectManager.getProjects();
+    for (let i = 0; i < projects.length; i++) {
+        selectElem.innerHTML += `<option value="${projects[i].getName()}">${projects[i].getName()}</option>`
     }
 
-    const removeContent = () => {
-        content.innerHTML = '';
-    }
-
-    const showProject = (projectName) => {
-        const project = projectManager.getProject(projectName);
-        const todos = project.getTodos();
-        for (let i = 0; i < todos.length; i++) {
-            if (todos[i] === null) continue;
-            const todoElement = getTodoElement(todos[i]);
-            content.appendChild(todoElement);
-            todoElement.todoObj = todos[i];
-        }
-    };
-
-    const showAll = () => {
-        removeContent();
-        const projects = projectManager.getProjects();
-        projects.forEach(project => {
-            showProject(project.getName());
-        });
-    }
-
-    return { showProject, showAll, removeContent, removeTodo }
-})();
+    task.value = todo.getTask();
+    details.value = todo.getDetails();
+    date.value = todo.getDate();
+    project.value = todo.getProject().getName();
+}
 
 const projectOne = project('Default');
 const projectTwo = project('Moneygun Run');
