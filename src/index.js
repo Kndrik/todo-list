@@ -156,6 +156,12 @@ const formManager = (() => {
             return;
         }
 
+        if (projectName === '') {
+            toggleNewProject();
+            alert(`Project name cannot be empty`);
+            return;
+        }
+
         const newProject = project(projectName);
         projectManager.addProject(newProject);
         toggleNewProject();
@@ -334,7 +340,9 @@ window.toggleNewProject = () => {
 
     if (!element.classList.contains('show')) return;
 
-    document.querySelector('input.project-name').focus();
+    const field = document.querySelector('input.project-name');
+    field.value = '';
+    field.focus();
     element.onsubmit = formManager.confirmNewProject;
 }
 
