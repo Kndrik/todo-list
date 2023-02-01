@@ -147,7 +147,7 @@ button#new-todo:hover {
     grid-template-columns: 40px 1fr 200px;
     column-gap: 15px;
     row-gap: 10px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     padding-right: 15px;
     box-sizing: border-box;
     margin-bottom: 10px;
@@ -242,8 +242,6 @@ button#new-todo:hover {
     font-size: 16px;
     color:rgb(104, 93, 255)
 }
-
-
 
 .details-popup,
 .create-popup,
@@ -425,4 +423,54 @@ button#new-todo:hover {
 .details-popup .panel .close:hover {
     cursor: pointer;
     color: black;
+}
+
+.project-li {
+    position: relative;
+}
+
+.project-li .project-add {
+    visibility: hidden;
+    position: absolute;
+    background-color: rgb(223, 74, 54);
+    right: 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: 'RobotoMedium';
+}
+
+.project-li:hover .project-add {
+    visibility: visible;
+}
+
+.project-add:hover {
+    cursor: pointer;
+    background-color: rgb(206, 63, 44);
+}
+
+.project-name {
+    font-size: 16px;
+    color: rgb(223, 74, 54);
+    border: 1px solid rgb(223, 74, 54);
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+.project-name:focus {
+    border: 2px solid rgb(223, 74, 54);
+    outline: none;
+}
+
+form.form-project {
+    visibility: hidden;
+    padding-left: 30px;
+}
+
+form.form-project.show {
+    visibility: visible;
 }

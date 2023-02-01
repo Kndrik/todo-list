@@ -73,26 +73,15 @@
         <div class="sidebar">
             <ul class="sideList">
                 <li id="all" class="clickable">All</li>
-
-                <li class="main">Projects</li>
+                <li class="project-li"><span>Projects</span><span class="project-add" onclick="toggleNewProject()"><span>+</span></span></li>
             </ul>
             <ul class="projectList">
-                
             </ul>
+            <form class="form-project">
+                <input class="project-name" type="text" name="project-name" id="project-name" placeholder="project name">
+            </form>
         </div>
         <div class="content">
-            <div class="todo">
-                <input type="checkbox" name="taskDone" id="taskDone">
-                <div class="task">Do this</div>
-                <div class="project">Project</div>
-                <div class="date">1st Sept. 2023</div>
-            </div>
-            <div class="todo">
-                <input type="checkbox" name="taskDone" id="taskDone">
-                <div class="task">Do this</div>
-                <div class="project">Project</div>
-                <div class="date">1st Sept. 2023</div>
-            </div>
         </div>
     </div>
 </body>

@@ -15,7 +15,7 @@ const todosHolder = (() => {
     }
 
     const removeTodo = (index) => {
-
+        todos.splice(index, 1);
     }
 
     return { addTodo, getSize, getTodo, removeTodo };
@@ -125,7 +125,6 @@ const formManager = (() => {
         const task = document.querySelector('.form-task').value;
         const details = document.querySelector('.form-details').value;
         const date = document.querySelector('.form-date').value;
-        console.log(date);
         const project = document.querySelector('.form-project').value;
 
         creationManager.createTodo(task, details, date, project, false);
@@ -141,11 +140,28 @@ const formManager = (() => {
 
         toggleEdit();
         const todoToEdit = todosHolder.getTodo(index);
+        projectManager.getProject(todoToEdit.getProject().getName()).removeTodo(todoToEdit);
         todoToEdit.edit(newTask, newDetails, newDate, newProject);
+        newProject.addTodo(todoToEdit);
         domManager.refreshDom();
     }
 
-    return { confirmNewTodo, confirmEditTodo }
+    const confirmNewProject = (event) => {
+        event.preventDefault();
+        const projectName = document.querySelector('.project-name').value;
+
+        if (projectManager.getProject(projectName) !== undefined) {
+            toggleNewProject();
+            alert(`There is already a project called ${projectName}`);
+            return;
+        }
+
+        const newProject = project(projectName);
+        projectManager.addProject(newProject);
+        toggleNewProject();
+    }
+
+    return { confirmNewTodo, confirmEditTodo, confirmNewProject }
 })();
 
 const domManager = (() => {
@@ -184,6 +200,7 @@ const domManager = (() => {
     }
 
     const showProject = (projectName) => {
+        console.log('show' + projectName);
         const project = projectManager.getProject(projectName);
         const todos = project.getTodos();
         for (let i = 0; i < todos.length; i++) {
@@ -309,6 +326,16 @@ window.toggleEdit = (index) => {
     details.value = todo.getDetails();
     date.value = todo.getDate();
     project.value = todo.getProject().getName();
+}
+
+window.toggleNewProject = () => {
+    const element = document.querySelector('form.form-project');
+    element.classList.toggle('show');
+
+    if (!element.classList.contains('show')) return;
+
+    document.querySelector('input.project-name').focus();
+    element.onsubmit = formManager.confirmNewProject;
 }
 
 const projectOne = project('Default');
