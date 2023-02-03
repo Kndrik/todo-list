@@ -37,6 +37,8 @@ html {
     font-family: 'RobotoRegular';
     font-weight: normal;
     font-style: normal;
+    --main-pop-color: rgb(223, 74, 54);
+    --dark-pop-color: rgb(206, 64, 46);
 }
 
 body {

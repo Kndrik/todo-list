@@ -1,5 +1,89 @@
 import './style.css';
 
+const storageManager = (() => { 
+    let todoArray = localStorage.getItem('todos') === null ?
+        [{task : 'Make a website',
+        details : 'It needs to be interactive and pretty. Who cares if it runs fast or not anyway.',
+        date : '2023-02-23',
+        project : 'Default',
+        done : false},
+        {task : 'Call grandma',
+        details : "That'll make the both of us happy.",
+        date : '2023-02-18',
+        project : 'Default',
+        done : true}] : 
+        JSON.parse(localStorage.getItem('todos'));
+    let projectsArray = localStorage.getItem('projects') === null ? ['Default'] : JSON.parse(localStorage.getItem('projects'));
+
+    const addTodo = (todo) => {
+        const newObj = {
+            task : todo.getTask(),
+            details : todo.getDetails(),
+            date : todo.getDate(),
+            project : todo.getProject().getName(),
+            done : todo.isDone()
+        }
+        todoArray.push(newObj);
+
+        localStorage.setItem('todos', JSON.stringify(todoArray));
+    }
+
+    const addProject = (name) => {
+        projectsArray.push(name);
+
+        localStorage.setItem('projects', JSON.stringify(projectsArray));
+    }
+
+    const generateObjects = () => {
+        createProjects();
+        createTodos();
+    }
+
+    const createProjects = () => {
+        for (let i = 0; i < projectsArray.length; i++) {
+            const newProject = project(projectsArray[i]);
+            projectManager.addProject(newProject);
+        }
+    }
+
+    const createTodos = () => {
+        for (let i = 0; i < todoArray.length; i++) {
+            const arrayElem = todoArray[i];
+            const projectObj = projectManager.getProject(arrayElem.project);
+            const newTodo = todo(arrayElem.task, arrayElem.details, arrayElem.date, projectObj, arrayElem.done);
+
+            todosHolder.addTodo(newTodo);
+            projectObj.addTodo(newTodo);
+            
+            domManager.refreshDom();
+        }
+    }
+
+    const updateTodo = (task, project, newTask, newDetails, newDate, newProject, newDone) => {
+        for (let i = 0; i < todoArray.length; i++) {
+            if (todoArray[i].task === task && todoArray[i].project === project) {
+                todoArray[i].task = newTask;
+                todoArray[i].details = newDetails;
+                todoArray[i].date = newDate;
+                todoArray[i].project = newProject;
+                todoArray[i].done = newDone;
+            }
+        }
+        localStorage.setItem('todos', JSON.stringify(todoArray));
+    }
+
+    const removeTodo = (task, project) => {
+        for (let i = 0; i < todoArray.length; i++) {
+            if (todoArray[i].task === task && todoArray[i].project === project) {
+                todoArray.splice(i, 1);
+            }
+        }
+        localStorage.setItem('todos', JSON.stringify(todoArray));
+    }
+
+    return { addTodo, addProject, generateObjects, updateTodo, removeTodo }
+})();
+
 const todosHolder = (() => {
     const todos = new Array();
     const addTodo = (todo) => {
@@ -78,6 +162,7 @@ const todo = (task, details, date, project, done) => {
     } 
 
     function edit(newTask, newDetails, newDate, newProject) {
+        storageManager.updateTodo(task, project.getName(), newTask, newDetails, newDate, newProject.getName(), isDone());
         task = newTask;
         details = newDetails;
         date = newDate;
@@ -162,8 +247,7 @@ const formManager = (() => {
             return;
         }
 
-        const newProject = project(projectName);
-        projectManager.addProject(newProject);
+        creationManager.createProject(projectName);
         toggleNewProject();
     }
 
@@ -206,7 +290,6 @@ const domManager = (() => {
     }
 
     const showProject = (projectName) => {
-        console.log('show' + projectName);
         const project = projectManager.getProject(projectName);
         const todos = project.getTodos();
         for (let i = 0; i < todos.length; i++) {
@@ -246,10 +329,13 @@ const creationManager = (() => {
         todosHolder.addTodo(newTodo);
         projectObj.addTodo(newTodo);
         domManager.refreshDom();
+        storageManager.addTodo(newTodo);
     }
 
     const createProject = (name) => {
-        projectManager.addProject(project(name));
+        const newProject = project(name);
+        projectManager.addProject(newProject);
+        storageManager.addProject(name);
     }
 
     return { createTodo, createProject };
@@ -258,6 +344,7 @@ const creationManager = (() => {
 window.checkboxClicked = (index) => {
     const todo = todosHolder.getTodo(index);
     todo.setDone(!todo.isDone());
+    storageManager.updateTodo(todo.getTask(), todo.getProject().getName(), todo.getTask(), todo.getDetails(), todo.getDate(), todo.getProject().getName(), todo.isDone());
     const element = document.querySelector(`.todo[index="${index.toString()}"]`);
     element.classList.toggle('done');
 }
@@ -280,6 +367,7 @@ window.deleteTodo = (index) => {
     const project = todo.getProject();
     project.removeTodo(todo);
     todosHolder.removeTodo(index);
+    storageManager.removeTodo(todo.getTask(), todo.getProject().getName());
 }
 
 window.toggleNewTodo = () => {
@@ -346,29 +434,30 @@ window.toggleNewProject = () => {
     element.onsubmit = formManager.confirmNewProject;
 }
 
-const projectOne = project('Default');
-const projectTwo = project('Moneygun Run');
-const projectThree = project('Empty project');
+// const projectOne = project('Default');
+// const projectTwo = project('Moneygun Run');
 
-projectManager.addProject(projectOne);
-projectManager.addProject(projectTwo);
-projectManager.addProject(projectThree);
+// projectManager.addProject(projectOne);
+// projectManager.addProject(projectTwo);
 
-const taskOne = todo('Do cool stuff', 'I really need to do more cool stuff. I have not done cool stuff in a very long time.', '1st Dec. 2022', projectOne, false);
-todosHolder.addTodo(taskOne);
-const taskTwo = todo('Do that', 'That would definitely help', '1st Dec. 2023', projectOne, false);
-todosHolder.addTodo(taskTwo);
-const taskThree = todo('Clean dishes', 'It is not very fun but it needs to be done. uh...', '25 January 2023', projectOne, true);
-todosHolder.addTodo(taskThree);
-const taskFour = todo('Change character', 'The current one clashes too much with the recent artistic direction change. We should find something that looks more in tune with the rest. (We could add a stylish cell shading ??)', 'Tomorrow', projectTwo, false);
-todosHolder.addTodo(taskFour);
+// const taskOne = todo('Do cool stuff', 'I really need to do more cool stuff. I have not done cool stuff in a very long time.', '1st Dec. 2022', projectOne, false);
+// todosHolder.addTodo(taskOne);
+// const taskTwo = todo('Do that', 'That would definitely help', '1st Dec. 2023', projectOne, false);
+// todosHolder.addTodo(taskTwo);
+// const taskThree = todo('Clean dishes', 'It is not very fun but it needs to be done. uh...', '25 January 2023', projectOne, true);
+// todosHolder.addTodo(taskThree);
+// const taskFour = todo('Change character', 'The current one clashes too much with the recent artistic direction change. We should find something that looks more in tune with the rest. (We could add a stylish cell shading ??)', 'Tomorrow', projectTwo, false);
+// todosHolder.addTodo(taskFour);
 
-projectOne.addTodo(taskOne);
-projectOne.addTodo(taskTwo);
-projectOne.addTodo(taskThree);
-projectTwo.addTodo(taskFour);
+// projectOne.addTodo(taskOne);
+// projectOne.addTodo(taskTwo);
+// projectOne.addTodo(taskThree);
+// projectTwo.addTodo(taskFour);
 
-//domManager.showProject(projectOne);
+// domManager.showProject(projectOne);
 // domManager.showProject(projectTwo);
 domManager.removeContent();
 domManager.showAll();
+
+
+storageManager.generateObjects();
